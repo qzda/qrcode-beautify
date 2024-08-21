@@ -1,0 +1,22 @@
+{
+  "name": "qrcode-kit",
+  "version": "1.0.0",
+  "description": "Create visually appealing QR codes effortlessly with qrcode-kit.",
+  "main": "index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup --config"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/qrcode": "^1.5.5"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}
