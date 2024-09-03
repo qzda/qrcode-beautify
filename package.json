@@ -6,6 +6,7 @@
     "qr",
     "code",
     "qrcode",
+    "qrcode-kit",
     "canvas",
     "Beauty"
   ],
@@ -21,7 +22,7 @@
     "build": "rollup --config"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",
@@ -34,5 +35,10 @@
   },
   "dependencies": {
     "qrcode": "^1.5.4"
+  },
+  "homepage": "https://github.com/chaihuibin926/qrcode-kit",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/chaihuibin926/qrcode-kit"
   }
 }
