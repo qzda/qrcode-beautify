@@ -1,65 +1,149 @@
 import QRcode from 'qrcode'
 
 export interface QrcodeProps {
-  codeColor: {
-    type: 'normal' | 'gradient';
-    value: string | { from: string; to: string };
-  };
-  codeBgColor: string;
-  margin: number;
-  error: 'L' | 'M' | 'Q' | 'H';
-  version: number;
-  contentType: 1 | 0;
   content: string;
-  point: Point;
-  eyeShape: EyeShape;
-  eyeColorCustom: boolean;
-  eyeOuterColor: string;
-  eyeInnerColor: string;
+  codeColor?: string;
+  codeBgColor?: string;
+  margin?: number;
+  error?: 'L' | 'M' | 'Q' | 'H';
+  version?: number;
+  point?: Point;
+  eyeShape?: EyeShape;
+  eyeOuterColor?: string;
+  eyeInnerColor?: string;
+  canvasId?: string;
+  width?: number;
 }
 
 export enum Point {
+  /**
+   * 普通
+   */
   Normal,
+  /**
+   * 瓷砖
+   */
   BigSquare,
+  /**
+   * 小方点
+   */
   MiniSquare,
+  /**
+   * 大圆点
+   */
   BigCircle,
+  /**
+   * 小圆点
+   */
   MiniCircle,
-  BigStar,
-  MiniStar,
+  /**
+   * 菱形
+   */
   Rhombic,
 }
 
+export const PointOptions = [
+  { value: Point.Normal, label: '普通' },
+  { value: Point.BigSquare, label: '瓷砖' },
+  { value: Point.MiniSquare, label: '小方点' },
+  { value: Point.BigCircle, label: '大圆点' },
+  { value: Point.MiniCircle, label: '小圆点' },
+  { value: Point.Rhombic, label: '菱形' },
+]
+
 export enum EyeShape {
+  /**
+   * 方正
+   */
   Square,
+  /**
+   * 圆角
+   */
   Radius,
+  /**
+   * 粗圆角
+   */
   ThickRadius,
+  /**
+   * 中圆角
+   */
   MiddleRadius,
+  /**
+   * 细圆角
+   */
   ThinsRadius,
+  /**
+   * 粗圆形
+   */
   ThickCircle,
+  /**
+   * 细圆形
+   */
   ThinsCircle,
-  Rhombic,
-  Star,
+  /**
+   * 气泡
+   */
   Bubble,
+  /**
+   * 眼睛
+   */
   Eye,
+  /**
+   * 单圆角
+   */
   SingleRadius,
 }
 
-export function createQrcode(content: string, opt: QrcodeProps, cb: (dataUrl: string, width: number) => void) {
+export const EyeShapeOptions = [
+  { value: EyeShape.Square, label: '方正' },
+  { value: EyeShape.Radius, label: '圆角' },
+  { value: EyeShape.ThickRadius, label: '粗圆角' },
+  { value: EyeShape.MiddleRadius, label: '中圆角' },
+  { value: EyeShape.ThinsRadius, label: '细圆角' },
+  { value: EyeShape.ThickCircle, label: '粗圆形' },
+  { value: EyeShape.ThinsCircle, label: '细圆形' },
+  { value: EyeShape.Bubble, label: '气泡' },
+  { value: EyeShape.Eye, label: '眼睛' },
+  { value: EyeShape.SingleRadius, label: '单圆角' },
+]
+
+export function createQrcode(opt: QrcodeProps, cb: (dataUrl: string, width: number) => void) {
+
+  opt = {
+    codeColor: '#000',
+    codeBgColor: '#fff',
+    margin: 0,
+    error: 'Q',
+    version: 1,
+    point: Point.Normal,
+    eyeShape: EyeShape.Square,
+    eyeOuterColor: '#000',
+    eyeInnerColor: '#000',
+    ...opt,
+  }
+
+  let canvas: HTMLCanvasElement
+  if (opt.canvasId) {
+    canvas = document.getElementById(opt.canvasId) as HTMLCanvasElement
+  } else {
+    canvas = document.createElement('canvas')
+  }
+
   const option: QRcode.QRCodeToDataURLOptions = {
     // scale: 20,
-    width: 400,
+    width: opt.width ?? canvas.width,
     margin: opt.margin,
     errorCorrectionLevel: opt.error,
     version: opt.version,
   }
 
   option.color = {
-    dark: opt.codeColor.value as string,
+    dark: opt.codeColor,
     light: opt.codeBgColor,
   }
 
-  let qrcode = QRcode.create(content, option)
-  const canvas = document.createElement('canvas')
+  let qrcode = QRcode.create(opt.content, option)
+  
   const ctx = canvas.getContext('2d')
 
   const margin = option.margin!
@@ -72,25 +156,20 @@ export function createQrcode(content: string, opt: QrcodeProps, cb: (dataUrl: st
   canvas.width = w * size
   canvas.height = w * size
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-  ctx.fillStyle = opt.codeBgColor 
+  ctx.fillStyle = opt.codeBgColor!
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
 
   const eyes = getEyeCoords(size, margin)
 
   const eyeColor = {
-    outer: opt.codeColor.value as string,
-    inner: opt.codeColor.value as string,
-  }
-
-  if (opt.eyeColorCustom) {
-    eyeColor.outer = opt.eyeOuterColor ?? opt.codeColor.value
-    eyeColor.inner = opt.eyeInnerColor ?? opt.codeColor.value
+    outer: opt.eyeOuterColor ?? opt.codeColor!,
+    inner: opt.eyeInnerColor ?? opt.codeColor!,
   }
   
   drawQrcodeEyes(
     ctx,
-    opt.eyeShape, 
+    opt.eyeShape!, 
     eyes, 
     w, 
     eyeColor,
@@ -116,7 +195,7 @@ export function createQrcode(content: string, opt: QrcodeProps, cb: (dataUrl: st
         const num = qrcode.modules.data[index]
         index++
         if (num && !isEye) {
-          ctx.fillStyle = opt.codeColor.value as string
+          ctx.fillStyle = opt.codeColor!
           let pointMargin = 0
           if (opt.point === Point.BigSquare) {
             const x = j * w
