@@ -7,7 +7,7 @@ npm i qrcode-beautify
 ```
 
 ## example
-```JavaScript
+```TypeScript
 createQrcode(
     {
         content: 'qrcode',
