@@ -1,14 +1,14 @@
 {
-  "name": "qrcode-kit",
+  "name": "qrcode-beautify",
   "version": "1.0.0",
-  "description": "Create visually appealing QR codes effortlessly with qrcode-kit.",
+  "description": "Create visually appealing QR codes effortlessly with qrcode-beautify.",
   "keywords": [
     "qr",
     "code",
     "qrcode",
-    "qrcode-kit",
+    "qrcode-beautify",
     "canvas",
-    "Beauty"
+    "beautify"
   ],
   "files": [
     "dist",
@@ -36,9 +36,9 @@
   "dependencies": {
     "qrcode": "^1.5.4"
   },
-  "homepage": "https://github.com/chaihuibin926/qrcode-kit",
+  "homepage": "https://github.com/chaihuibin926/qrcode-beautify",
   "repository": {
     "type": "github",
-    "url": "https://github.com/chaihuibin926/qrcode-kit"
+    "url": "https://github.com/chaihuibin926/qrcode-beautify"
   }
 }

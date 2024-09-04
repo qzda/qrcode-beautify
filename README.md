@@ -1,5 +1,5 @@
-# qrcode-kit
-Create visually appealing QR codes effortlessly with qrcode-kit.
+# qrcode-beautify
+Create visually appealing QR codes effortlessly with qrcode-beautify.
 
 ## example
 ```JavaScript
